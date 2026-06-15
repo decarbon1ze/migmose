@@ -13,7 +13,9 @@
 MIG_mose generates machine-readable files from MIG `.docx` documents ([edi-energy](https://www.edi-energy.de/index.php?id=38)).
 MIG_mose is the sister of [kohlrahbi](https://github.com/Hochfrequenz/kohlrahbi).
 
-If you're looking for a tool to process the **official** BDEW XMLs for MIGs (available since 2024), checkout [fundamend](https://github.com/Hochfrequenz/xml-fundamend-python).
+> [!WARNING]
+> Hochfrequenz switched their complete data pipeline to the official (paid) XML MIG files by BDEW and [fundamend](https://github.com/Hochfrequenz/xml-fundamend-python) to process them.
+> This is why we no longer maintain or develop this repository.
 
 ## Tech-Stack
 - MIG_mose is a Python(3.11,3.12) project.
