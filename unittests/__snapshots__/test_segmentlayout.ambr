@@ -1,0 +1,588 @@
+# serializer version: 1
+# name: TestSegmentlayout.test_segmentlayouts
+  dict({
+    'segmentlayouts': list([
+      dict({
+        'bezeichnung': 'UNH',
+        'elemente': list([
+          dict({
+            'anwendung': '''
+              Eindeutige Nachrichtenreferenz des Absenders. Nummer
+              der Nachrichten einer Übertragungsdatei im
+              Datenaustausch.  Identisch mit DE0062 im UNT, i. d. R. vom
+              sendenden Konverter vergeben.
+            ''',
+            'bdew_format': 'an..14',
+            'bdew_status': 'M',
+            'bezeichnung': '0062',
+            'name': 'Nachrichten-Referenznummer',
+            'standard_format': 'an..14',
+            'standard_status': 'M',
+          }),
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'S009',
+            'datenelemente': list([
+              dict({
+                'anwendung': '\tORDCHG\tBestelländerung',
+                'bdew_format': 'an..6',
+                'bdew_status': 'M',
+                'bezeichnung': '0065',
+                'name': 'Nachrichtentyp-Kennung',
+                'standard_format': 'an..6',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '\tD\tEntwurfs-Version',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '0052',
+                'name': '''
+                  Versionsnummer des
+                  Nachrichtentyps
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '\t20B\tAusgabe 2020 - B',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '0054',
+                'name': '''
+                  Freigabenummer des
+                  Nachrichtentyps
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '\tUN\tUN/CEFACT',
+                'bdew_format': 'an..2',
+                'bdew_status': 'M',
+                'bezeichnung': '0051',
+                'name': 'Verwaltende Organisation',
+                'standard_format': 'an..2',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '''
+                  	1.1	Versionsnummer der zugrundeliegenden
+                  BDEW-Nachrichtenbeschreibung
+                ''',
+                'bdew_format': 'an..6',
+                'bdew_status': 'R',
+                'bezeichnung': '0057',
+                'name': '''
+                  Anwendungscode der
+                  zuständigen Organisation
+                ''',
+                'standard_format': 'an..6',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Nachrichten-Kennung',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00001',
+        'zaehler': '0010',
+      }),
+      dict({
+        'bezeichnung': 'BGM',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'R',
+            'bezeichnung': 'C002',
+            'datenelemente': list([
+              dict({
+                'anwendung': '''
+                  	Z51	Sperrung
+                  	Z52	Entsperrung
+                  	Z57	Übermittlung von Werten an ESA
+                ''',
+                'bdew_format': 'an..3',
+                'bdew_status': 'R',
+                'bezeichnung': '1001',
+                'name': 'Dokumentenname, Code',
+                'standard_format': 'an..3',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': '''
+              Dokumenten-/
+              Nachrichtenname
+            ''',
+            'standard_status': 'C',
+          }),
+          dict({
+            'anwendung': '',
+            'bdew_status': 'R',
+            'bezeichnung': 'C106',
+            'datenelemente': list([
+              dict({
+                'anwendung': '''
+                  EDI-Nachrichtennummer, vergeben vom Absender des
+                  Dokuments.
+                ''',
+                'bdew_format': 'an..70',
+                'bdew_status': 'R',
+                'bezeichnung': '1004',
+                'name': 'Dokumentennummer',
+                'standard_format': 'an..70',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': '''
+              Dokumenten-/Nachrichten-
+              Identifikation
+            ''',
+            'standard_status': 'C',
+          }),
+          dict({
+            'anwendung': '\t1\tAufhebung/Stornierung',
+            'bdew_format': 'an..3',
+            'bdew_status': 'R',
+            'bezeichnung': '1225',
+            'name': 'Nachrichtenfunktion, Code',
+            'standard_format': 'an..3',
+            'standard_status': 'C',
+          }),
+        ]),
+        'nr': '00002',
+        'zaehler': '0020',
+      }),
+      dict({
+        'bezeichnung': 'DTM',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'C507',
+            'datenelemente': list([
+              dict({
+                'anwendung': '\t137\tDokumenten-/Nachrichtendatum/-zeit',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '2005',
+                'name': '''
+                  Datums- oder Uhrzeit- oder
+                  Zeitspannen-Funktion,
+                  Qualifier
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '',
+                'bdew_format': 'an..35',
+                'bdew_status': 'R',
+                'bezeichnung': '2380',
+                'name': '''
+                  Datum oder Uhrzeit oder
+                  Zeitspanne, Wert
+                ''',
+                'standard_format': 'an..35',
+                'standard_status': 'C',
+              }),
+              dict({
+                'anwendung': '\t303\tCCYYMMDDHHMMZZZ',
+                'bdew_format': 'an..3',
+                'bdew_status': 'R',
+                'bezeichnung': '2379',
+                'name': '''
+                  Datums- oder Uhrzeit- oder
+                  Zeitspannen-Format, Code
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Datum/Uhrzeit/Zeitspanne',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00003',
+        'zaehler': '0030',
+      }),
+      dict({
+        'bezeichnung': 'RFF',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'C506',
+            'datenelemente': list([
+              dict({
+                'anwendung': '\tON\tAuftragsnummer (Einkauf)',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '1153',
+                'name': 'Referenz, Qualifier',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': 'Nachrichtennummer',
+                'bdew_format': 'an..35',
+                'bdew_status': 'R',
+                'bezeichnung': '1154',
+                'name': 'Referenz, Identifikation',
+                'standard_format': 'an..70',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Referenz',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00004',
+        'zaehler': '0100',
+      }),
+      dict({
+        'bezeichnung': 'RFF',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'C506',
+            'datenelemente': list([
+              dict({
+                'anwendung': '\tTN\tTransaktions-Referenznummer',
+                'bdew_format': 'an..2',
+                'bdew_status': 'M',
+                'bezeichnung': '1153',
+                'name': 'Referenz, Qualifier',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': 'Vorgangsnummer',
+                'bdew_format': 'n..5',
+                'bdew_status': 'R',
+                'bezeichnung': '1154',
+                'name': 'Referenz, Identifikation',
+                'standard_format': 'an..70',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Referenz',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00005',
+        'zaehler': '0100',
+      }),
+      dict({
+        'bezeichnung': 'RFF',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'C506',
+            'datenelemente': list([
+              dict({
+                'anwendung': '\tZ13\tPrüfidentifikator',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '1153',
+                'name': 'Referenz, Qualifier',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '''
+                  Prüfidentifikator
+                  	39000	Stornierung Sperr-/Entsperrauftrag
+                  	39001	Weiterleitung der Stornierung
+                  	39002	Stornierung der Bestellung für ESA
+                ''',
+                'bdew_format': 'n5',
+                'bdew_status': 'R',
+                'bezeichnung': '1154',
+                'name': 'Referenz, Identifikation',
+                'standard_format': 'an..70',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Referenz',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00006',
+        'zaehler': '0100',
+      }),
+      dict({
+        'bezeichnung': 'NAD',
+        'elemente': list([
+          dict({
+            'anwendung': '''
+              	MS	Dokumenten-/Nachrichtenaussteller bzw. -
+              absender
+            ''',
+            'bdew_format': 'an..3',
+            'bdew_status': 'M',
+            'bezeichnung': '3035',
+            'name': 'Beteiligter, Qualifier',
+            'standard_format': 'an..3',
+            'standard_status': 'M',
+          }),
+          dict({
+            'anwendung': '',
+            'bdew_status': 'R',
+            'bezeichnung': 'C082',
+            'datenelemente': list([
+              dict({
+                'anwendung': 'MP-ID',
+                'bdew_format': 'an..35',
+                'bdew_status': 'M',
+                'bezeichnung': '3039',
+                'name': 'Beteiligter, Identifikation',
+                'standard_format': 'an..35',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': 'Nicht benutzt',
+                'bdew_format': '',
+                'bdew_status': 'N',
+                'bezeichnung': '1131',
+                'name': 'Codeliste, Code',
+                'standard_format': 'an..17',
+                'standard_status': 'C',
+              }),
+              dict({
+                'anwendung': '''
+                  	9	GS1
+                  	293	DE, BDEW (Bundesverband der Energie- und
+                  Wasserwirtschaft e.V.)
+                  	332	DE, DVGW Service & Consult GmbH
+                ''',
+                'bdew_format': 'an..3',
+                'bdew_status': 'R',
+                'bezeichnung': '3055',
+                'name': '''
+                  Verantwortliche Stelle für die
+                  Codepflege, Code
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Identifikation des Beteiligten',
+            'standard_status': 'C',
+          }),
+        ]),
+        'nr': '00007',
+        'zaehler': '0160',
+      }),
+      dict({
+        'bezeichnung': 'CTA',
+        'elemente': list([
+          dict({
+            'anwendung': '\tIC\tInformationskontakt',
+            'bdew_format': 'an..3',
+            'bdew_status': 'R',
+            'bezeichnung': '3139',
+            'name': '''
+              Funktion des
+              Ansprechpartners, Code
+            ''',
+            'standard_format': 'an..3',
+            'standard_status': 'C',
+          }),
+          dict({
+            'anwendung': '',
+            'bdew_status': 'R',
+            'bezeichnung': 'C056',
+            'datenelemente': list([
+              dict({
+                'anwendung': 'Nicht benutzt',
+                'bdew_format': '',
+                'bdew_status': 'N',
+                'bezeichnung': '3413',
+                'name': 'Kontakt, Nummer',
+                'standard_format': 'an..17',
+                'standard_status': 'C',
+              }),
+              dict({
+                'anwendung': '',
+                'bdew_format': 'an..256',
+                'bdew_status': 'R',
+                'bezeichnung': '3412',
+                'name': 'Kontakt',
+                'standard_format': 'an..256',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Kontaktangaben',
+            'standard_status': 'C',
+          }),
+        ]),
+        'nr': '00008',
+        'zaehler': '0260',
+      }),
+      dict({
+        'bezeichnung': 'COM',
+        'elemente': list([
+          dict({
+            'anwendung': '',
+            'bdew_status': 'M',
+            'bezeichnung': 'C076',
+            'datenelemente': list([
+              dict({
+                'anwendung': 'Nummer / Adresse',
+                'bdew_format': 'an..512',
+                'bdew_status': 'M',
+                'bezeichnung': '3148',
+                'name': '''
+                  Kommunikationsadresse,
+                  Identifikation
+                ''',
+                'standard_format': 'an..512',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': '''
+                  	EM	Elektronische Post
+                  	FX	Telefax
+                  	TE	Telefon
+                  	AJ	weiteres Telefon
+                  	AL	Handy
+                ''',
+                'bdew_format': 'an..3',
+                'bdew_status': 'M',
+                'bezeichnung': '3155',
+                'name': '''
+                  Art des
+                  Kommunikationsmittels, Code
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'M',
+              }),
+            ]),
+            'name': 'Kommunikationsverbindung',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00009',
+        'zaehler': '0270',
+      }),
+      dict({
+        'bezeichnung': 'NAD',
+        'elemente': list([
+          dict({
+            'anwendung': '\tMR\tNachrichtenempfänger',
+            'bdew_format': 'an..3',
+            'bdew_status': 'M',
+            'bezeichnung': '3035',
+            'name': 'Beteiligter, Qualifier',
+            'standard_format': 'an..3',
+            'standard_status': 'M',
+          }),
+          dict({
+            'anwendung': '',
+            'bdew_status': 'R',
+            'bezeichnung': 'C082',
+            'datenelemente': list([
+              dict({
+                'anwendung': 'MP-ID',
+                'bdew_format': 'an..35',
+                'bdew_status': 'M',
+                'bezeichnung': '3039',
+                'name': 'Beteiligter, Identifikation',
+                'standard_format': 'an..35',
+                'standard_status': 'M',
+              }),
+              dict({
+                'anwendung': 'Nicht benutzt',
+                'bdew_format': '',
+                'bdew_status': 'N',
+                'bezeichnung': '1131',
+                'name': 'Codeliste, Code',
+                'standard_format': 'an..17',
+                'standard_status': 'C',
+              }),
+              dict({
+                'anwendung': '''
+                  	9	GS1
+                  	293	DE, BDEW (Bundesverband der Energie- und
+                  Wasserwirtschaft e.V.)
+                  	332	DE, DVGW Service & Consult GmbH
+                ''',
+                'bdew_format': 'an..3',
+                'bdew_status': 'R',
+                'bezeichnung': '3055',
+                'name': '''
+                  Verantwortliche Stelle für die
+                  Codepflege, Code
+                ''',
+                'standard_format': 'an..3',
+                'standard_status': 'C',
+              }),
+            ]),
+            'name': 'Identifikation des Beteiligten',
+            'standard_status': 'C',
+          }),
+        ]),
+        'nr': '00010',
+        'zaehler': '0160',
+      }),
+      dict({
+        'bezeichnung': 'UNS',
+        'elemente': list([
+          dict({
+            'anwendung': '''
+              Dieses Segment dient der Trennung von Positions- und
+              Summenteil einer Nachricht.
+              	S	Trennung von Positions- und Summenteil
+            ''',
+            'bdew_format': 'a1',
+            'bdew_status': 'M',
+            'bezeichnung': '0081',
+            'name': 'Abschnittskennung, codiert',
+            'standard_format': 'a1',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00011',
+        'zaehler': '2380',
+      }),
+      dict({
+        'bezeichnung': 'UNT',
+        'elemente': list([
+          dict({
+            'anwendung': '''
+              Hier wird die Gesamtzahl der Segmente einer Nachricht
+              angegeben.
+            ''',
+            'bdew_format': 'n..6',
+            'bdew_status': 'M',
+            'bezeichnung': '0074',
+            'name': '''
+              Anzahl der Segmente in einer
+              Nachricht
+            ''',
+            'standard_format': 'n..6',
+            'standard_status': 'M',
+          }),
+          dict({
+            'anwendung': '''
+              Die Referenznummer aus dem UNH-Segment muss hier
+              wiederholt werden.
+            ''',
+            'bdew_format': 'an..14',
+            'bdew_status': 'M',
+            'bezeichnung': '0062',
+            'name': 'Nachrichten-Referenznummer',
+            'standard_format': 'an..14',
+            'standard_status': 'M',
+          }),
+        ]),
+        'nr': '00012',
+        'zaehler': '2450',
+      }),
+    ]),
+  })
+# ---
