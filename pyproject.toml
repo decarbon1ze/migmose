@@ -19,61 +19,86 @@ classifiers = [
 ]
 
 dependencies = [
-    "click",
-    "loguru",
-    "jinja2",
-    "pydantic",
-    "python-docx",
-    "efoli>=1.4.0"
-] # add all the dependencies here
+    "click>=8.1",
+    "efoli>=1.4.0",
+    "jinja2>=3.1",
+    "loguru>=0.7",
+    "pydantic>=2.9",
+    "python-docx>=1.1",
+]
 
 dynamic = ["readme", "version"]
 
-[project.optional-dependencies]
-coverage = [
-    "coverage==7.14.1"
-]
-formatting = [
-    "black==25.12.0",
-    "isort==8.0.1"
-]
-linting = [
-    "pylint==4.0.6"
-]
-spellcheck = [
-    "codespell==2.4.2"
-]
-test_packaging = [
-    "build==1.5.0",
-    "twine==6.2.0"
-]
-tests = [
-    "maus[tree]==0.6.1",
-    "pytest==9.1.0",
-    "pytest-loguru==0.4.1",
-    "syrupy==5.3.1"
-]
-type_check = [
-    "mypy==2.1.0"
-]
-
 [project.urls]
-Changelog = "https://github.com/Hochfrequenz/migmose/releases"
-Homepage = "https://github.com/Hochfrequenz/migmose"
+Homepage = "https://github.com/decarbon1ze/migmose"
+Upstream = "https://github.com/Hochfrequenz/migmose"
 
 [project.scripts]
 migmose = "migmose.__main__:main"
 
-[tool.black]
+[dependency-groups]
+test = [
+    "maus[tree]==0.6.1",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "pytest-loguru==0.4.1",
+    "syrupy==5.3.1",
+]
+lint = ["ruff==0.17.3"]
+typecheck = [
+    "ty==0.0.107",
+    { include-group = "test" },
+]
+spelling = ["codespell==2.4.3"]
+dev = [
+    { include-group = "test" },
+    { include-group = "lint" },
+    { include-group = "typecheck" },
+    { include-group = "spelling" },
+]
+
+[tool.ruff]
 line-length = 120
-target_version = ["py311", "py312"]
+extend-exclude = ["src/_migmose_version.py"]
 
-[tool.isort]
-line_length = 120
-profile = "black"
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "N",   # pep8-naming
+    "PL",  # pylint
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "PLR0913", # too-many-arguments
+    "PLR0917", # too-many-positional-arguments
+    "PLR0912", # too-many-branches
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-comparison
+]
 
-[tool.pylint."MESSAGES CONTROL"]
-max-line-length = 120
+[tool.ruff.lint.per-file-ignores]
+# the docstring links to a file of MAUS at a fixed commit
+"src/migmose/mig/segmentgrouphierarchies.py" = ["E501"]
+
+[tool.ruff.format]
+line-ending = "lf"
+
+[tool.ty.src]
+exclude = ["src/_migmose_version.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["unittests"]
+
+[tool.coverage.run]
+omit = ["unittests/*", "src/migmose/__main__.py", "src/_migmose_version.py"]
+
+[tool.codespell]
+ignore-words = "domain-specific-terms.txt"
 
 [build-system]
 requires = ["hatchling>=1.8.0", "hatch-vcs", "hatch-fancy-pypi-readme"]
