@@ -16,6 +16,8 @@ from docx.table import Table, _Cell
 from efoli import EdifactFormat, EdifactFormatVersion
 from loguru import logger
 
+from migmose.mig.segmentlayout import Datenelement, Datenelementgruppe, Segmentlayout, Segmentlayouts
+
 
 def find_file_to_format(
     message_formats: list[EdifactFormat], edi_energy_repo: Path, format_version: EdifactFormatVersion
@@ -151,6 +153,93 @@ def parse_raw_nachrichtenstrukturzeile(input_path: Path) -> list[str]:
     # filter empty rows and headers
     mig_tables = [_zfill_nr(row) for row in mig_tables if row not in ("", "\n", nachrichtenstruktur_header)]
     return mig_tables
+
+
+_SEGMENTLAYOUT_COLUMNS = 11  # grid columns of the tables that hold the segment layouts
+_SEGMENTLAYOUT_CELLS = 7  # Bez, Name, standard status and format, BDEW status and format, Anwendung / Bemerkung
+_COMPONENT_INDENT = 25_000  # EMU; a component is indented ~50000 further than its group, any other row ~9000 at most
+_segment_header_regex = re.compile(r"^\t?(?P<zaehler>\d{4})\t(?P<nr>\d{1,5}|[A-Za-z]+\d{4})$")
+_segmentgroup_header_regex = re.compile(r"^\t\d{4}$")
+_datenelementgruppe_regex = re.compile(r"^[A-Z]\d{3}$")
+_datenelement_regex = re.compile(r"^\d{4}$")
+
+
+def _visible_cells(table: Table) -> Generator[list[_Cell], None, None]:
+    """yields the cells of each row as the document shows them: a merged cell once"""
+    for row in table.rows:
+        yield [_Cell(tc, table) for tc in row._tr.tc_lst]
+
+
+def parse_segmentlayouts(input_path: Path) -> Segmentlayouts:
+    """
+    parses the segment layouts of a MIG: the data elements of each segment and the groups they belong to.
+
+    A layout starts with a row that holds the Zähler and the Nr of the segment. Its rows with seven cells are the head
+    of the table, the data element groups and the data elements; a row that fills only 'Anwendung / Bemerkung' continues
+    the row above it. Only the indentation tells a data element of a group from one that follows the group.
+    """
+    doc = docx.Document(str(input_path.absolute()))
+    segmentlayouts: list[Segmentlayout] = []
+    layout: Segmentlayout | None = None
+    gruppe: Datenelementgruppe | None = None
+    gruppe_indent = 0
+    last: Datenelement | Datenelementgruppe | None = None
+    for table in doc.tables:
+        if len(table.columns) != _SEGMENTLAYOUT_COLUMNS:
+            continue
+        for cells in _visible_cells(table):
+            first = cells[0].text.strip("\n")
+            if header := _segment_header_regex.match(first):
+                nr = header.group("nr")
+                layout = Segmentlayout(
+                    zaehler=header.group("zaehler"),
+                    nr=nr.zfill(5) if nr.isdigit() else nr,
+                    bezeichnung=cells[1].text.strip(),
+                    elemente=[],
+                )
+                segmentlayouts.append(layout)
+                gruppe = last = None
+                continue
+            if _segmentgroup_header_regex.match(first):
+                layout = gruppe = last = None
+                continue
+            if layout is None or len(cells) != _SEGMENTLAYOUT_CELLS:
+                continue
+            bezeichnung = first.strip()
+            name, standard_status, standard_format, bdew_status, bdew_format = (cell.text for cell in cells[1:6])
+            anwendung = cells[6].text
+            indent = cells[0].paragraphs[0].paragraph_format.left_indent or 0
+            if _datenelementgruppe_regex.match(bezeichnung):
+                gruppe = Datenelementgruppe(
+                    bezeichnung=bezeichnung,
+                    name=name,
+                    standard_status=standard_status.strip(),
+                    bdew_status=bdew_status.strip(),
+                    anwendung=anwendung,
+                    datenelemente=[],
+                )
+                gruppe_indent = indent
+                layout.elemente.append(gruppe)
+                last = gruppe
+            elif _datenelement_regex.match(bezeichnung):
+                datenelement = Datenelement(
+                    bezeichnung=bezeichnung,
+                    name=name,
+                    standard_status=standard_status.strip(),
+                    standard_format=standard_format.strip(),
+                    bdew_status=bdew_status.strip(),
+                    bdew_format=bdew_format.strip(),
+                    anwendung=anwendung,
+                )
+                if gruppe is not None and indent >= gruppe_indent + _COMPONENT_INDENT:
+                    gruppe.datenelemente.append(datenelement)
+                else:
+                    gruppe = None
+                    layout.elemente.append(datenelement)
+                last = datenelement
+            elif bezeichnung == "" and last is not None and anwendung.strip():
+                last.anwendung += "\n" + anwendung
+    return Segmentlayouts(segmentlayouts=segmentlayouts)
 
 
 _pattern = re.compile(

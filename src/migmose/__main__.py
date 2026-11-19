@@ -12,7 +12,12 @@ from migmose.mig.nachrichtenstrukturtabelle import NachrichtenstrukturTabelle
 from migmose.mig.nestednachrichtenstruktur import NestedNachrichtenstruktur
 from migmose.mig.reducednestednachrichtenstruktur import ReducedNestedNachrichtenstruktur
 from migmose.mig.segmentgrouphierarchies import SegmentGroupHierarchy
-from migmose.parsing import _extract_document_version, find_file_to_format, parse_raw_nachrichtenstrukturzeile
+from migmose.parsing import (
+    _extract_document_version,
+    find_file_to_format,
+    parse_raw_nachrichtenstrukturzeile,
+    parse_segmentlayouts,
+)
 
 
 def check_message_format(
@@ -64,9 +69,12 @@ def check_message_format(
 @click.option(
     "-ft",
     "--file-type",
-    type=click.Choice(["csv", "nested_json", "reduced_nested_json", "tree"], case_sensitive=False),
+    type=click.Choice(
+        ["csv", "nested_json", "reduced_nested_json", "tree", "segmentlayout_json"], case_sensitive=False
+    ),
     default=["csv", "nested_json", "reduced_nested_json", "tree"],
-    help="Defines the output format. Choose between csv and nested_json and reduced_nested_json. Default is csv.",
+    help="Defines the output format: csv, nested_json, reduced_nested_json and tree for the Nachrichtenstruktur, "
+    "segmentlayout_json for the data elements of each segment. Default is every format of the Nachrichtenstruktur.",
     multiple=True,
 )
 def main(
@@ -146,6 +154,14 @@ def main(
             )
             document_version, *_ = _extract_document_version(file)
             reduced_nested_nachrichtenstruktur.output_tree(m_format, output_dir_for_format, document_version)
+        if "segmentlayout_json" in file_type:
+            logger.info(
+                "💾 Saving Segmentlayouts for {} and {} as json to {}.",
+                m_format,
+                format_version,
+                output_dir_for_format,
+            )
+            parse_segmentlayouts(file).to_json(m_format, output_dir_for_format)
 
 
 if __name__ == "__main__":
