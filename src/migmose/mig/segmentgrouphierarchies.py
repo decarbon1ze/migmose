@@ -17,12 +17,12 @@ class SegmentGroupHierarchy(BaseModel):
     """
     This module contains the same model for a segment group hierarchy as used by the MAUS library,
     which can be found here:
-    (https://github.com/Hochfrequenz/mig_ahb_utility_stack/blob/eae2d84d600f42257cf364190da486aa011a5882/src/maus/models/message_implementation_guide.py#L17). # pylint: disable=line-too-long
+    (https://github.com/Hochfrequenz/mig_ahb_utility_stack/blob/eae2d84d600f42257cf364190da486aa011a5882/src/maus/models/message_implementation_guide.py#L17).
     However, instead of using the attrs class, we are creating a Pydantic class.
     """
 
-    opening_segment: Optional[str] = None
-    segment_group: Optional[str] = None
+    opening_segment: str | None = None
+    segment_group: str | None = None
     sub_hierarchy: list[Optional["SegmentGroupHierarchy"]] = Field(default_factory=list)
 
     @classmethod
@@ -30,8 +30,8 @@ class SegmentGroupHierarchy(BaseModel):
         cls, reduced_nested_nachrichtenstruktur: ReducedNestedNachrichtenstruktur
     ) -> "SegmentGroupHierarchy":
         """init Segmentrgroup Hierarchy"""
-        segment_group: Optional[str] = None
-        opening_segment: Optional[str] = None
+        segment_group: str | None = None
+        opening_segment: str | None = None
         if reduced_nested_nachrichtenstruktur.header_linie is not None:
             segment_group = reduced_nested_nachrichtenstruktur.header_linie.bezeichnung
         if (
@@ -39,7 +39,7 @@ class SegmentGroupHierarchy(BaseModel):
             and reduced_nested_nachrichtenstruktur.segmente[0] is not None
         ):
             opening_segment = reduced_nested_nachrichtenstruktur.segmente[0].bezeichnung
-        sub_hierarchy: list[Optional["SegmentGroupHierarchy"]] = []
+        sub_hierarchy: list[SegmentGroupHierarchy | None] = []
         for sub_segmentgroup in reduced_nested_nachrichtenstruktur.segmentgruppen:
             if sub_segmentgroup is not None:
                 sub_hierarchy.append(cls.create_segmentgroup_hierarchy(sub_segmentgroup))

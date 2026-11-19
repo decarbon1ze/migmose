@@ -5,7 +5,7 @@ contains class for trees consisting of segments of mig tables
 import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, DefaultDict, Optional, TypeAlias
+from typing import Any, Optional, TypeAlias
 
 from efoli import EdifactFormat
 from jinja2 import Template
@@ -15,21 +15,18 @@ from pydantic import BaseModel, Field
 from migmose.mig.nachrichtenstrukturzeile import NachrichtenstrukturZeile
 from migmose.mig.nestednachrichtenstruktur import NestedNachrichtenstruktur
 
-_SegmentDict: TypeAlias = (
-    dict[
-        tuple[str, str],
-        tuple[
-            list[Optional[NachrichtenstrukturZeile]],
-            Optional[NachrichtenstrukturZeile],
-            set[tuple[str, str]],
-        ],
-    ]
-    | None
-)
+_SegmentDict: TypeAlias = dict[
+    tuple[str, str],
+    tuple[
+        list[NachrichtenstrukturZeile | None],
+        NachrichtenstrukturZeile | None,
+        set[tuple[str, str]],
+    ],
+]
 
 
 # Helper function to create a unique identifier for each segment
-def _get_identifier(segment: Optional[NachrichtenstrukturZeile]) -> tuple[str, str]:
+def _get_identifier(segment: NachrichtenstrukturZeile | None) -> tuple[str, str]:
     if segment is None:
         return "0", "root"
     return segment.zaehler, segment.bezeichnung
@@ -37,10 +34,10 @@ def _get_identifier(segment: Optional[NachrichtenstrukturZeile]) -> tuple[str, s
 
 # Function to process segments and remove duplicates within the same list.
 def _process_segments(
-    segments: list[Optional[NachrichtenstrukturZeile]],
-) -> list[Optional[NachrichtenstrukturZeile]]:
+    segments: list[NachrichtenstrukturZeile | None],
+) -> list[NachrichtenstrukturZeile | None]:
     seen = set()
-    unique_segments: list[Optional[NachrichtenstrukturZeile]] = []
+    unique_segments: list[NachrichtenstrukturZeile | None] = []
     for segment in segments:
         if segment is not None:
             identifier = _get_identifier(segment)
@@ -59,17 +56,14 @@ def _process_segmentgruppen(
     """
     Recursively clean segment groups to ensure nested nachrichtenstruktur consisting only of a unique subset.
     """
-    result: list[Optional[ReducedNestedNachrichtenstruktur]] = []
+    result: list[ReducedNestedNachrichtenstruktur | None] = []
 
     for sg in sorted(segmentgruppen_identifiers):
         if sg is not None:
-            # not sure about those type hints... they please mypy but I'm not the dev of this code
-            segmente: list[Optional[NachrichtenstrukturZeile]]
-            header_line: Optional[NachrichtenstrukturZeile]
-            segmentgroups: set[tuple[str, str]]
-            segmente, header_line, segmentgroups = segment_dict[sg]  # type:ignore[index]
+            segmente, header_line, segmentgroups = segment_dict[sg]
             if segmente is not None:
-                segmente = sorted(segmente, key=lambda x: x.zaehler)
+                # _process_segments keeps no None in the list, which its type does not tell
+                segmente = sorted(segmente, key=lambda x: x.zaehler)  # ty: ignore[missing-union-attribute]
             _new_sg = ReducedNestedNachrichtenstruktur(header_linie=header_line, segmente=segmente)
             _new_sg.segmentgruppen = _process_segmentgruppen(segmentgroups, segment_dict, depth + 1)
             result.append(_new_sg)
@@ -78,12 +72,9 @@ def _process_segmentgruppen(
 
 
 def _build_segment_dict(
-    segment_groups: list[Optional[NestedNachrichtenstruktur]],
-    segment_dict: _SegmentDict = None,
-) -> dict[
-    tuple[str, str],
-    tuple[list[Optional[NachrichtenstrukturZeile]], Optional[NachrichtenstrukturZeile], set[tuple[str, str]]],
-]:
+    segment_groups: list[NestedNachrichtenstruktur | None],
+    segment_dict: _SegmentDict | None = None,
+) -> _SegmentDict:
     """Build a dictionary of segments and segment groups to find unique set."""
     if segment_dict is None:
         segment_dict = {}
@@ -112,7 +103,7 @@ def _build_segment_dict(
     return segment_dict
 
 
-def _dict_to_tree_str(tree: DefaultDict[str, list[NachrichtenstrukturZeile]]) -> str:
+def _dict_to_tree_str(tree: defaultdict[str, list[NachrichtenstrukturZeile]]) -> str:
     template_str = """{%- for key, segment_list in tree.items() -%}
     {{-key-}}:{%- for segment in segment_list -%}
     {{segment.bezeichnung}}[{{segment.standard_status}};{{segment.bdew_status}}]
@@ -126,8 +117,8 @@ def _dict_to_tree_str(tree: DefaultDict[str, list[NachrichtenstrukturZeile]]) ->
 
 def _build_tree_dict(
     reduced_nestednachrichtenstruktur: "ReducedNestedNachrichtenstruktur",
-    tree_dict: Optional[DefaultDict[str, list[NachrichtenstrukturZeile]]] = None,
-) -> DefaultDict[str, list[NachrichtenstrukturZeile]]:
+    tree_dict: defaultdict[str, list[NachrichtenstrukturZeile]] | None = None,
+) -> defaultdict[str, list[NachrichtenstrukturZeile]]:
     """
     Build a dictionary to compose the .tree files in the MAUS library.
     """
@@ -199,8 +190,8 @@ def _build_tree_dict(
 class ReducedNestedNachrichtenstruktur(BaseModel):
     """will contain the tree structure of nachrichtenstruktur tables"""
 
-    header_linie: Optional[NachrichtenstrukturZeile] = None
-    segmente: list[Optional[NachrichtenstrukturZeile]] = Field(default_factory=list)
+    header_linie: NachrichtenstrukturZeile | None = None
+    segmente: list[NachrichtenstrukturZeile | None] = Field(default_factory=list)
     segmentgruppen: list[Optional["ReducedNestedNachrichtenstruktur"]] = Field(default_factory=list)
 
     @classmethod

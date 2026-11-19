@@ -41,7 +41,7 @@ class TestReducedNestedNachrichtenstruktur:
             nested_nachrichtenstruktur
         )
         reduced_nested_nachrichtenstruktur.to_json(message_format, tmp_path)
-        with open(tmp_path / "reduced_nested_nachrichtenstruktur.json", "r", encoding="utf-8") as file1:
+        with open(tmp_path / "reduced_nested_nachrichtenstruktur.json", encoding="utf-8") as file1:
             actual_reduced_nested_json = json.load(file1)
             assert actual_reduced_nested_json == snapshot
 
@@ -62,7 +62,7 @@ class TestReducedNestedNachrichtenstruktur:
             / message_format
             / "reduced_nested_nachrichtenstruktur.json"
         )
-        with open(reduced_nested_nachrichtenstruktur_path, "r", encoding="utf-8") as file1:
+        with open(reduced_nested_nachrichtenstruktur_path, encoding="utf-8") as file1:
             reduced_nested_json = json.load(file1)
             reduced_nested_nachrichtenstruktur = ReducedNestedNachrichtenstruktur(**reduced_nested_json)
             tree_dict = _build_tree_dict(reduced_nested_nachrichtenstruktur)
@@ -94,9 +94,9 @@ class TestReducedNestedNachrichtenstruktur:
         )
         document_version, *_ = _extract_document_version(file_path)
         reduced_nested_nachrichtenstruktur.output_tree(message_format, tmp_path, document_version)
-        with open(tmp_path / f"{message_format}{document_version}.tree", "r", encoding="utf-8") as actual_file:
+        with open(tmp_path / f"{message_format}{document_version}.tree", encoding="utf-8") as actual_file:
             assert actual_file.read() == snapshot
         try:
             check_file_can_be_parsed_as_tree(tmp_path / f"{message_format}{document_version}.tree")
         except ValueError as e:
-            assert False, f"maus exception: {e}"
+            raise AssertionError(f"maus exception: {e}") from e

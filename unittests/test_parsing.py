@@ -7,10 +7,9 @@ from pathlib import Path
 
 import pytest
 from efoli import EdifactFormat, EdifactFormatVersion
-from pytest_loguru.plugin import caplog  # type: ignore[import-untyped] # pylint: disable=unused-import
 
 from migmose.parsing import _extract_document_version, find_file_to_format, parse_raw_nachrichtenstrukturzeile
-from unittests import expected_output_dir, path_to_test_edi_energy_mirror_repo, path_to_test_FV2310
+from unittests import expected_output_dir, path_to_test_edi_energy_mirror_repo, path_to_test_fv2310
 
 
 class TestParsing:
@@ -28,7 +27,7 @@ class TestParsing:
         )
         assert (
             file_dict[EdifactFormat.ORDCHG]
-            == path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+            == path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         )
 
     def test_find_only_one_file(self, caplog):
@@ -43,7 +42,7 @@ class TestParsing:
             assert "⚠️ No file found for ORDRSP" in caplog.text
             assert (
                 file_dict[EdifactFormat.ORDCHG]
-                == path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+                == path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
             )
 
     def test_find_only_one_file_multiple_docx(self):
@@ -56,7 +55,7 @@ class TestParsing:
         )
         assert (
             file_dict[EdifactFormat.IFTSTA]
-            == path_to_test_FV2310
+            == path_to_test_fv2310
             / "IFTSTAMIG-informatorischeLesefassung2.0e-AußerordentlicheVeröffentlichung_20250403_20240311.docx"
         )
 
@@ -64,7 +63,7 @@ class TestParsing:
         """
         Test to parse the raw nachrichtenstrukturzeile from a docx file.
         """
-        input_file = path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+        input_file = path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         mig_table = parse_raw_nachrichtenstrukturzeile(input_file)
         expected_csv_file = (
             expected_output_dir / EdifactFormatVersion.FV2310 / EdifactFormat.ORDCHG / "nachrichtenstruktur.csv"
@@ -74,10 +73,9 @@ class TestParsing:
             assert len(mig_table) == number_of_lines_in_csv
             csvfile.seek(0)
             next(csvfile)
-            for actual_line, expected_line in zip(mig_table, csvfile):
+            for actual_line, expected_line in zip(mig_table, csvfile, strict=True):
                 assert actual_line.replace("\t", "") == expected_line.strip().replace(",", "")
 
-    # pylint: disable=line-too-long
     @pytest.mark.parametrize(
         "file_path",
         [
