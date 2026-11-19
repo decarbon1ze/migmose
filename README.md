@@ -54,6 +54,7 @@ Below the available options are listed:
       - `csv` for flat Nachrichtenstruktur tables
       - `nested_json` for json files of the nested Nachrichtenstruktur tables
       - `reduced_nested_json` for a reduced nested Nachrichtenstruktur
+      - `sgh_json` for segmentgrouphierarchy files (cf. [MAUS sgh](https://github.com/Hochfrequenz/edifact-templates/tree/b024e3671deae9aec7e8ea29e74fa48257f6ccfe/segment_group_hierarchies))
       - `tree` for .tree files (cf. [MAUS tree](https://github.com/Hochfrequenz/mig_ahb_utility_stack/blob/5cce94069ead5aa63d4b9ac7f5e0fcec0bf608ea/src/maus/reader/tree_to_sgh.py))
       - `segmentlayout_json` for the segment layouts: the data elements of each segment (see [Segment layouts](#segment-layouts))
     - Example: `--file-type "csv"

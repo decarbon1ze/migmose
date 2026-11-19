@@ -70,11 +70,12 @@ def check_message_format(
     "-ft",
     "--file-type",
     type=click.Choice(
-        ["csv", "nested_json", "reduced_nested_json", "tree", "segmentlayout_json"], case_sensitive=False
+        ["csv", "nested_json", "reduced_nested_json", "sgh_json", "tree", "segmentlayout_json"], case_sensitive=False
     ),
     default=["csv", "nested_json", "reduced_nested_json", "tree"],
-    help="Defines the output format: csv, nested_json, reduced_nested_json and tree for the Nachrichtenstruktur, "
-    "segmentlayout_json for the data elements of each segment. Default is every format of the Nachrichtenstruktur.",
+    help="Defines the output format: csv, nested_json, reduced_nested_json, sgh_json and tree for the "
+    "Nachrichtenstruktur, segmentlayout_json for the data elements of each segment. "
+    "Default is csv, nested_json, reduced_nested_json and tree.",
     multiple=True,
 )
 def main(
@@ -136,9 +137,8 @@ def main(
             reduced_nested_nachrichtenstruktur.to_json(m_format, output_dir_for_format)
         if "sgh_json" in file_type:
             sgh = SegmentGroupHierarchy.create_segmentgroup_hierarchy(reduced_nested_nachrichtenstruktur)
-            # Save the reduced nested Nachrichtenstruktur as json
             logger.info(
-                "💾 Saving reduced nested Nachrichtenstruktur for {} and {} as json to {}.",
+                "💾 Saving segment group hierarchy for {} and {} as json to {}.",
                 m_format,
                 format_version,
                 output_dir_for_format,

@@ -42,6 +42,9 @@ class TestMain:
             "CONTRL2.0b.tree",
         }
 
+    def test_sgh_json(self, tmp_path):
+        assert _run(tmp_path, "sgh_json") == {"CONTRL.sgh.json"}
+
     def test_segmentlayout_json(self, tmp_path):
         assert _run(tmp_path, "segmentlayout_json") == {"segmentlayouts.json"}
 
