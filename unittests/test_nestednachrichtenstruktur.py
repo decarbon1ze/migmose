@@ -6,7 +6,7 @@ from efoli import EdifactFormat, EdifactFormatVersion
 from migmose.mig.nachrichtenstrukturtabelle import NachrichtenstrukturTabelle
 from migmose.mig.nestednachrichtenstruktur import NestedNachrichtenstruktur
 from migmose.parsing import parse_raw_nachrichtenstrukturzeile
-from unittests import expected_output_dir, path_to_test_FV2310
+from unittests import expected_output_dir, path_to_test_fv2310
 
 
 class TestNestedNachrichtenstruktur:
@@ -15,18 +15,19 @@ class TestNestedNachrichtenstruktur:
     """
 
     def test_create_nested_nachrichtenstruktur(self):
-        file_path = path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+        file_path = path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         raw_lines = parse_raw_nachrichtenstrukturzeile(file_path)
         nachrichtenstrukturtabelle = NachrichtenstrukturTabelle.create_nachrichtenstruktur_tabelle(raw_lines)
         nested_nachrichtenstruktur, _ = NestedNachrichtenstruktur.create_nested_nachrichtenstruktur(
             nachrichtenstrukturtabelle
         )
         assert len(nested_nachrichtenstruktur.segmente) == 5
-        # pylint: disable=unsubscriptable-object
-        assert len(nested_nachrichtenstruktur.segmentgruppen[3].segmentgruppen) == 1
+        fourth_group = nested_nachrichtenstruktur.segmentgruppen[3]
+        assert fourth_group is not None
+        assert len(fourth_group.segmentgruppen) == 1
 
     def test_to_json(self, tmp_path):
-        input_file = path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+        input_file = path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         message_format = EdifactFormat.ORDCHG
         output_dir = tmp_path
         raw_lines = parse_raw_nachrichtenstrukturzeile(input_file)
@@ -44,10 +45,10 @@ class TestNestedNachrichtenstruktur:
             expected_output_dir / EdifactFormatVersion.FV2310 / EdifactFormat.ORDCHG / "nested_nachrichtenstruktur.json"
         )
 
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = json.load(f)
 
-        with open(reference_file, "r", encoding="utf-8") as g:
+        with open(reference_file, encoding="utf-8") as g:
             reference_json = json.load(g)
 
         assert content == reference_json

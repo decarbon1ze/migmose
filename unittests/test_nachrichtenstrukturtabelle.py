@@ -5,7 +5,7 @@ from efoli import EdifactFormat, EdifactFormatVersion
 
 from migmose.mig.nachrichtenstrukturtabelle import NachrichtenstrukturTabelle
 from migmose.parsing import parse_raw_nachrichtenstrukturzeile
-from unittests import expected_output_dir, path_to_test_FV2310
+from unittests import expected_output_dir, path_to_test_fv2310
 
 
 class TestNachrichtenstrukturTabelle:
@@ -23,7 +23,7 @@ class TestNachrichtenstrukturTabelle:
         assert nachrichtenstrukturtabelle.lines[0].zaehler == "0580"
 
     def test_parse(self):
-        input_file = path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+        input_file = path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         raw_lines = parse_raw_nachrichtenstrukturzeile(input_file)
         nachrichtenstrukturtabelle = NachrichtenstrukturTabelle.create_nachrichtenstruktur_tabelle(raw_lines)
         expected_csv_file = (
@@ -36,7 +36,7 @@ class TestNachrichtenstrukturTabelle:
 
             reader = csv.DictReader(csvfile)
 
-            for actual_line, expected_line in zip(nachrichtenstrukturtabelle.lines, reader):
+            for actual_line, expected_line in zip(nachrichtenstrukturtabelle.lines, reader, strict=True):
                 for key, value in expected_line.items():
                     actual_value = getattr(actual_line, key)
                     if value == "":
@@ -45,7 +45,7 @@ class TestNachrichtenstrukturTabelle:
                         assert str(actual_value) == value
 
     def test_to_csv(self, tmp_path):
-        input_file = path_to_test_FV2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
+        input_file = path_to_test_fv2310 / "ORDCHGMIG-informatorischeLesefassung1.1_99991231_20231001.docx"
         message_format = EdifactFormat.ORDCHG
         output_dir = tmp_path
         raw_lines = parse_raw_nachrichtenstrukturzeile(input_file)
@@ -60,11 +60,11 @@ class TestNachrichtenstrukturTabelle:
             expected_output_dir / EdifactFormatVersion.FV2310 / EdifactFormat.ORDCHG / "nachrichtenstruktur.csv"
         )
 
-        with open(file_path, "r", encoding="utf-8") as csv_file:
+        with open(file_path, encoding="utf-8") as csv_file:
             reader = csv.DictReader(csv_file)
 
-            with open(reference_file, "r", encoding="utf-8") as reference_csv:
+            with open(reference_file, encoding="utf-8") as reference_csv:
                 reference_reader = csv.DictReader(reference_csv)
                 assert reader.fieldnames == reference_reader.fieldnames
-                for row, reference_row in zip(reader, reference_reader):
+                for row, reference_row in zip(reader, reference_reader, strict=True):
                     assert row == reference_row

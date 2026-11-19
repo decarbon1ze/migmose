@@ -4,14 +4,14 @@ contains functions for file handling and parsing.
 
 import re
 from collections import defaultdict
+from collections.abc import Generator
 from datetime import datetime
 from pathlib import Path
-from typing import DefaultDict, Generator, Union
 
 import click
 import docx
 from docx.document import Document
-from docx.oxml import CT_Tbl  # type:ignore[attr-defined]
+from docx.oxml import CT_Tbl
 from docx.table import Table, _Cell
 from efoli import EdifactFormat, EdifactFormatVersion
 from loguru import logger
@@ -24,7 +24,7 @@ def find_file_to_format(
     finds the file with the message type in the input directory
     """
     input_dir = edi_energy_repo / Path("edi_energy_de") / Path(format_version)
-    all_file_dict: DefaultDict[EdifactFormat, list[Path]] = defaultdict(list)
+    all_file_dict: defaultdict[EdifactFormat, list[Path]] = defaultdict(list)
     file_dict: dict[EdifactFormat, Path] = {}
     for message_format in message_formats:
         for file in input_dir.iterdir():
@@ -103,9 +103,8 @@ def get_latest_file(file_list: list[Path]) -> Path:
     return latest_file
 
 
-def get_paragraphs_up_to_diagram(parent: Union[Document, _Cell]) -> Generator[Table, None, None]:
+def get_paragraphs_up_to_diagram(parent: Document | _Cell) -> Generator[Table, None, None]:
     """Goes through paragraphs and tables"""
-    # pylint: disable=protected-access
     if isinstance(parent, Document):
         parent_elm = parent.element.body
     elif isinstance(parent, _Cell):
@@ -138,7 +137,6 @@ def parse_raw_nachrichtenstrukturzeile(input_path: Path) -> list[str]:
     """
     parses raw nachrichtenstrukturzeile from a table. returns list of raw lines
     """
-    # pylint: disable=protected-access
     doc = docx.Document(str(input_path.absolute()))
     docx_objects = get_paragraphs_up_to_diagram(doc)
     mig_tables = []

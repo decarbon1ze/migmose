@@ -59,7 +59,7 @@ class NachrichtenstrukturZeile(BaseModel):
             field_names = field_names[:1] + field_names[2:]
         if is_line_incomplete:
             raise ValueError(f"Expected 8 or 9 fields, got {len(fields)}, line: {raw_line}")
-        field_dict: dict[str, Any] = dict(zip(field_names, fields))
+        field_dict: dict[str, Any] = dict(zip(field_names, fields, strict=True))
         if "nr" in field_dict and len(field_dict["nr"]) < 5:
             field_dict["nr"] = field_dict["nr"].zfill(5)
         return cls(**field_dict)

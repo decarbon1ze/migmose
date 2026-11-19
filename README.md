@@ -3,51 +3,33 @@
 # MIG_mose
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Python Versions (officially) supported](https://img.shields.io/pypi/pyversions/migmose.svg)
-![Pypi status badge](https://img.shields.io/pypi/v/migmose)
-![Unittests status badge](https://github.com/Hochfrequenz/migmose/workflows/Unittests/badge.svg)
-![Coverage status badge](https://github.com/Hochfrequenz/migmose/workflows/Coverage/badge.svg)
-![Linting status badge](https://github.com/Hochfrequenz/migmose/workflows/Linting/badge.svg)
-![Black status badge](https://github.com/Hochfrequenz/migmose/workflows/Formatting/badge.svg)
+![Checks status badge](https://github.com/decarbon1ze/migmose/workflows/checks/badge.svg)
 
 MIG_mose generates machine-readable files from MIG `.docx` documents ([edi-energy](https://www.edi-energy.de/index.php?id=38)).
 MIG_mose is the sister of [kohlrahbi](https://github.com/Hochfrequenz/kohlrahbi).
 
-> [!WARNING]
-> Hochfrequenz switched their complete data pipeline to the official (paid) XML MIG files by BDEW and [fundamend](https://github.com/Hochfrequenz/xml-fundamend-python) to process them.
-> This is why we no longer maintain or develop this repository.
+> [!NOTE]
+> This repository is a fork of [Hochfrequenz/migmose](https://github.com/Hochfrequenz/migmose), which Hochfrequenz no longer maintains.
+> decarbon1ze maintains this fork. It writes the same files as the original for the same documents.
+> The package on PyPI is the original; install the fork from this repository (see [Installation](#installation)).
 
 ## Tech-Stack
-- MIG_mose is a Python(3.11,3.12) project.
+- MIG_mose is a Python (3.11, 3.12, 3.13) project, managed with [uv](https://docs.astral.sh/uv/).
 - .docx files a processed by the [python-docx](https://python-docx.readthedocs.io/en/latest/) library.
 - EdiFact formats are used as in [efoli](https://github.com/Hochfrequenz/efoli)).
 - syrupy for unittest snapshots
 
 ## Installation
-MIG_mose is a Python-based tool.
-Therefore, you have to make sure, that Python is running on your machine.
-
-We recommend using virtual environments to keep your system clean.
-
-Create a new virtual environment with
-```bash
-python -m venv .venv
-```
-
-The activation of the virtual environment depends on your used OS.
-
-**Windows**
-```
-.venv\Scripts\activate
-```
-**MacOS/Linux**
-```
-source .venv/bin/activate
-```
-Finally, install the package with
+Install MIG_mose from this repository, for example as a tool with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-pip install migmose
+uv tool install git+https://github.com/decarbon1ze/migmose
+```
+
+or into the current environment with pip:
+
+```bash
+pip install git+https://github.com/decarbon1ze/migmose
 ```
 
 ## Features And How To Use Them
@@ -91,28 +73,30 @@ migmose -eemp /path/to/edi_energy_mirror -o /path/to/output_directory -mf "UTILM
 
 ### Setup
 
-To set up the development environment, you have to install the dev dependencies.
+[uv](https://docs.astral.sh/uv/) installs Python, the dependencies and the development tools in the versions `uv.lock` pins:
 
 ```bash
-tox -e dev
+uv sync
 ```
 
 ### Run all tests and linters
 
-To run the tests, you can use tox.
-
 ```bash
-tox
+uv run pytest               # tests
+uv run ruff check           # linter
+uv run ruff format --check  # formatting
+uv run ty check             # type check
+uv run codespell src README.md
 ```
+
 To update the test snapshots run
 ```bash
-tox -e update_snapshots
+uv run pytest --snapshot-update
 ```
-See our [Python Template Repository](https://github.com/Hochfrequenz/python_template_repository#how-to-use-this-repository-on-your-machine) for detailed explanations.
 
 ## Contribute
 
-You are very welcome to contribute to this template repository by opening a pull request against the main branch.
+You are very welcome to contribute to this repository by opening a pull request against the main branch.
 
 ## Related Tools and Context
 

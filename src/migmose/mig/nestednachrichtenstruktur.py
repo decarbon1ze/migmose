@@ -5,7 +5,7 @@ contains class for structured segmentgroups in mig tables. Builds table recursiv
 import json
 from pathlib import Path
 from types import NoneType
-from typing import Any, Optional, Tuple
+from typing import Any, Optional
 
 from efoli import EdifactFormat
 from loguru import logger
@@ -65,17 +65,17 @@ class NestedNachrichtenstruktur(BaseModel):
     }
     """
 
-    header_linie: Optional[NachrichtenstrukturZeile] = None
-    segmente: list[Optional[NachrichtenstrukturZeile]] = Field(default_factory=list)
+    header_linie: NachrichtenstrukturZeile | None = None
+    segmente: list[NachrichtenstrukturZeile | None] = Field(default_factory=list)
     segmentgruppen: list[Optional["NestedNachrichtenstruktur"]] = Field(default_factory=list)
 
     @classmethod
     def create_nested_nachrichtenstruktur(
-        cls, table: NachrichtenstrukturTabelle, header_line: Optional[NachrichtenstrukturZeile] = None, index: int = 0
-    ) -> Tuple["NestedNachrichtenstruktur", int]:
+        cls, table: NachrichtenstrukturTabelle, header_line: NachrichtenstrukturZeile | None = None, index: int = 0
+    ) -> tuple["NestedNachrichtenstruktur", int]:
         """init nested Nachrichtenstruktur"""
-        collected_segments: list[Optional[NachrichtenstrukturZeile]] = []
-        collected_segmentgroups: list[Optional["NestedNachrichtenstruktur"]] = []
+        collected_segments: list[NachrichtenstrukturZeile | None] = []
+        collected_segmentgroups: list[NestedNachrichtenstruktur | None] = []
         i = index
         while i < len(table.lines):
             line = table.lines[i]
